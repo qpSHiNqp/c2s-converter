@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+
+require 'c2s/converter'
+require "optparse"
+require "fileutils"
+
+opts = ARGV.getopts('i:o:u:a:h:')
+input_dir = opts['i']
+output_dir = opts['o']
+user_csv = opts['u']
+attachment_dir = opts['a']
+
+if opts['generate-template'] && !!chatwork_api_key
+  client = ChatWorkToSlack::Client.new(chatwork_api_key: chatwork_api_key)
+  if File.exists?('users.csv')
+    puts 'users.csv exists'
+  else
+    csv = client.generate_template
+    CSV.parse(csv).each {|row| p row }
+    File.write('users.csv', csv)
+    puts 'users.csv generated'
+  end
+  exit
+end
+
+if opts['h'] || !input_dir || !user_csv
+  puts <<-EOS
+Usage: chatwork_to_slack
+    -i input directory
+    -o output directory
+    -u user_list.csv path
+    -h help
+Example:
+dry run
+    $ c2s-converter -i /path/to/chatwork_export -u /path/to/user_list.csv
+write out converted exports
+    $ c2s-converter -i /path/to/chatwork_export -o /path/to/converted_chatwork_export -u /path/to/user_list.csv
+write out attachment to local filesystem
+    $ c2s-converter -i /path/to/chatwork_export -a /path/to/attachment_dir
+  EOS
+  exit
+end
+
+if !attachment_dir
+  cli = C2s::Converter::Client.new(user_csv)
+  cli.convert(input_dir, output_dir)
+end
+
+if attachment_dir
+  C2s::Attachment::Exporter.new(input_dir, attachment_dir).run
+end
