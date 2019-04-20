@@ -1,0 +1,51 @@
+PATH
+  remote: .
+  specs:
+    c2s-converter (0.1.0)
+      chatwork_to_slack
+      nokogiri
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    chatwork (0.11.0)
+      faraday (~> 0.9)
+      faraday_middleware
+      hashie
+    chatwork_to_slack (0.1.2)
+      chatwork (~> 0.3)
+      goodbye_chatwork (~> 0.0.8)
+    domain_name (0.5.20180417)
+      unf (>= 0.0.5, < 1.0.0)
+    faraday (0.15.4)
+      multipart-post (>= 1.2, < 3)
+    faraday-cookie_jar (0.0.6)
+      faraday (>= 0.7.4)
+      http-cookie (~> 1.0.0)
+    faraday_middleware (0.13.1)
+      faraday (>= 0.7.4, < 1.0)
+    goodbye_chatwork (0.0.8)
+      faraday
+      faraday-cookie_jar
+    hashie (3.6.0)
+    http-cookie (1.0.3)
+      domain_name (~> 0.5)
+    mini_portile2 (2.4.0)
+    multipart-post (2.0.0)
+    nokogiri (1.10.2)
+      mini_portile2 (~> 2.4.0)
+    rake (10.5.0)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.6)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler (~> 1.17)
+  c2s-converter!
+  rake (~> 10.0)
+
+BUNDLED WITH
+   1.17.0

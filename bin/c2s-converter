@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'c2s/converter'
+require 'c2s/attachment'
 require "optparse"
 require "fileutils"
 
@@ -23,7 +24,7 @@ if opts['generate-template'] && !!chatwork_api_key
   exit
 end
 
-if opts['h'] || !input_dir || !user_csv
+if opts['h'] || !input_dir || (!user_csv && !attachment_dir)
   puts <<-EOS
 Usage: chatwork_to_slack
     -i input directory
@@ -47,5 +48,5 @@ if !attachment_dir
 end
 
 if attachment_dir
-  C2s::Attachment::Exporter.new(input_dir, attachment_dir).run
+  C2s::Attachment.new(input_dir, attachment_dir).run
 end
