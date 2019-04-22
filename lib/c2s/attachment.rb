@@ -33,14 +33,18 @@ module C2s
             time = node.css('td.d-chat_list-file-update').inner_text.gsub!(/\s/, "")
             filename = [time, user, name].join("__")
             filename.gsub!(/\//, "_") if filename =~ /\//
-            res =  open("https://api.chatwork.com/v2/rooms/#{room_id}/files/#{fid}?create_download_url=1", "X-ChatWorkToken" => token).read
-            info = JSON.parse(res)
-            output_filename = File.join(output_dir, room, filename)
-            FileUtils.mkdir_p(File.dirname(output_filename))
-            open(output_filename, "wb") do |output|
-              open(info["download_url"]) do |data|
-                output.write(data.read)
+            begin
+              res =  open("https://api.chatwork.com/v2/rooms/#{room_id}/files/#{fid}?create_download_url=1", "X-ChatWorkToken" => token).read
+              info = JSON.parse(res)
+              output_filename = File.join(output_dir, room, filename)
+              FileUtils.mkdir_p(File.dirname(output_filename))
+              open(output_filename, "wb") do |output|
+                open(info["download_url"]) do |data|
+                  output.write(data.read)
+                end
               end
+            rescue OpenURI::HTTPError => e
+              puts "Error #{e}"
             end
             puts "Saved #{output_filename}"
           end
